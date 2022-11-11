@@ -10,10 +10,10 @@
     <body style="padding: 20px">
         <form class="pure-form" method="post" action="/api/login" style="text-align: center; margin: 150px;">
             <fieldset>
-                <legend style="font-weight: 700;">登入頁面</legend>
-                <input type="text" placeholder=" 請輸入帳號" name="username" />
+                <legend style="font-weight: 700;">${title}</legend>
+                <input type="text" placeholder=" <%=request.getAttribute("placeholder_account") %>" name="username" />
                 <p />
-                <input type="password" placeholder=" 請輸入密碼" name="password" />
+                <input type="password" placeholder=" <%=request.getAttribute("placeholder_password") %>" name="password" />
                 <p />
                 <!-- <input type="text" th:value="${_csrf.token}" name="_csrf" th:if="${_csrf}" />
                 <p /> -->
@@ -21,7 +21,7 @@
                 <p /> -->
                 <label id="authResult" style="color: red;"></label>
                 <p />
-                <button type="submit" class="pure-button pure-button-primary">登入</button>
+                <button type="submit" class="pure-button pure-button-primary">${btn_login}</button>
             </fieldset>
         </form>
     </body>

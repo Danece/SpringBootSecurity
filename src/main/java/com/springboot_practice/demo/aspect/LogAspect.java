@@ -39,11 +39,6 @@ public class LogAspect {
         longTimeStampStart = System.currentTimeMillis();
     }
 
-    private String getMethodName (JoinPoint joinPoint) {
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        return signature.getName();
-    }
-
     // 帶入 JoinPoint 表示被執行的那個 Pointcut 程式類別
     // @AfterReturning 表示在 Controller 正常完成之後運作
     @AfterReturning("pointcut()")
