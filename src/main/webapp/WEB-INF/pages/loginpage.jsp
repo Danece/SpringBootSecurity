@@ -10,7 +10,7 @@
     <body style="padding: 20px">
         <form class="pure-form" method="post" action="/api/login" style="text-align: center; margin: 150px;">
             <fieldset>
-                <legend>登入頁面</legend>
+                <legend style="font-weight: 700;">登入頁面</legend>
                 <input type="text" placeholder=" 請輸入帳號" name="username" />
                 <p />
                 <input type="password" placeholder=" 請輸入密碼" name="password" />

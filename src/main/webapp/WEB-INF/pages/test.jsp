@@ -15,6 +15,5 @@
         <%= noticeMsg %>
         <hr>
         <button sec:authorize="hasAnyAuthority('admin')" onclick="location.href='/welcome';" >返回</button>
-        <button sec:authorize="hasAnyAuthority('admin', 'normal')" onclick="location.href='/logout';" >登出</button>
     </body>
 </html>
