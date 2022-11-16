@@ -50,7 +50,7 @@
 		$.ajax({
 			type: "POST",
 			contentType: "application/json",
-			url: "/api/accessToken",
+			url: "/api/jwtResult",
 			data: JSON.stringify(search),
 			dataType: 'json',
 			cache: false,

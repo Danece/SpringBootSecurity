@@ -4,12 +4,12 @@ import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Date;
 
-// import org.apache.http.client.methods.CloseableHttpResponse;
-// import org.apache.http.client.methods.HttpPost;
-// import org.apache.http.entity.StringEntity;
-// import org.apache.http.impl.client.CloseableHttpClient;
-// import org.apache.http.impl.client.HttpClients;
-// import org.apache.http.util.EntityUtils;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -51,31 +51,6 @@ public class MainController {
     public String goMainPage (@RequestParam(value = "name", defaultValue = "Danece") String name) {
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        // m.addAttribute("accessToken", getStubResponse);
-        // =============================================================================
-        /* 
-         * 目的 : 在進到登入後頁面時，執行API取得AccessToken
-         * 狀況 : 卡在 {"error":"請先登入才可進行操作"} 
-        */
-        // String result = "";
-        // HttpPost post = new HttpPost("http://localhost:8080/api/accessToken");
-        // String valueToEncode = userDetails.getUsername() + ":admin";
-        // StringBuilder json = new StringBuilder();
-        // json.append("{");
-        // json.append("\"userName\":\"" + userDetails.getUsername() + "\",");
-        // json.append("}");
-        // try {
-        //     post.setEntity(new StringEntity(json.toString()));
-        //     post.addHeader("basic", Base64.getEncoder().encodeToString(valueToEncode.getBytes()));
-        //     CloseableHttpClient httpClient = HttpClients.createDefault() ;
-        //     CloseableHttpResponse response = httpClient.execute(post);
-        //     System.out.println("[goMainPage-post] " + Base64.getEncoder().encodeToString(valueToEncode.getBytes()).toString());
-        //     result = EntityUtils.toString(response.getEntity());
-        // } catch (Exception e) {
-        //     e.printStackTrace();
-        // }
-        // System.out.println("[goMainPage-result] " + result);
-        // =============================================================================
         System.out.println("[goMainPage] " + userDetails.getUsername());
         return "welcome.jsp";
     }
@@ -89,11 +64,6 @@ public class MainController {
         m.addAttribute("placeholder_password", messageSource.getMessage( "loginpage.placeholder.password",  null, locale));
         m.addAttribute("btn_login", messageSource.getMessage( "str.login",  null, locale));
         return "loginpage.jsp";
-    }
-
-    private static final String getBasicAuthenticationHeader(String username, String password) {
-        String valueToEncode = username + ":" + password;
-        return "Basic " + Base64.getEncoder().encodeToString(valueToEncode.getBytes());
     }
 
 }
