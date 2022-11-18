@@ -1,5 +1,7 @@
 package com.springboot_practice.demo.config;
 
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,10 +9,13 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-// import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.context.WebApplicationContext;
@@ -25,16 +30,28 @@ import com.springboot_practice.demo.handle.AuthenticationSuccessHandlerImpl;
 import com.springboot_practice.demo.handle.LoginAuthenticationFilter;
 import com.springboot_practice.demo.handle.MyAccessDeniedHandler;
 import com.springboot_practice.demo.handle.RestAuthenticationEntryPoint;
-
+import com.springboot_practice.demo.service.UserDetailsServiceImpl;;
 
 @Configuration
 @EnableWebSecurity
 // Spring boot security 實作
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    private UserDetailsServiceImpl userDetailsServiceImpl;
+
+    @Autowired
+    private DataSource dataSource; //數據源
     
-    // @Autowired
-	// private UserDetailsService userDetailsService;
-    
+    // For Remember me
+    @Bean
+    public PersistentTokenRepository tokenRepository() {
+        JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();
+        tokenRepository.setDataSource(dataSource); //設置數據源
+        // tokenRepository.setCreateTableOnStartup(true); //啟動創建表，創建成功後註釋掉
+        return tokenRepository;
+    }
+
     @Autowired
     private MyAccessDeniedHandler myAccessDeniedHandler;
 
@@ -66,7 +83,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         // 登出
             .logout()
 			.deleteCookies("JSESSIONID")
-			// .logoutSuccessUrl("/loginpage")
+			.logoutSuccessUrl("/loginpage")
 			.logoutRequestMatcher(new AntPathRequestMatcher("/logout")) // 可以使用任何的 HTTP 方法登出
             .and()
         // 異常處理
@@ -75,12 +92,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .accessDeniedHandler(myAccessDeniedHandler) // 針對 API，errorCode 403
             .and()
         // 記住我
-            // .rememberMe()
-			// // .userDetailsService(userDetailsService)
-            // .key("rem-me-key")
-            // .rememberMeCookieName("remenberlogin")
-			// .tokenValiditySeconds(60) // 通常都會大於 session timeout 的時間
-            // .and()
+            .rememberMe()
+			// .userDetailsService(userDetailsService) //設置userDetailsService 
+            .tokenRepository(tokenRepository())  //設置數據訪問層
+            .tokenValiditySeconds(60 * 60)  //記住我的時間(秒) 
+            .rememberMeServices(beanRememberMeServices())
+            .and()
         // 用新的登錄踢掉舊的登錄
             .sessionManagement()
             .maximumSessions(1) // 可接受登入上限，超過則會踢掉前一個
@@ -149,6 +166,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new HttpSessionEventPublisher(); 
     }
 
+    // For Remember me
+    @Bean
+    public RememberMeServices beanRememberMeServices() {
+        // 需要设置 key 和 获取用户信息的服务
+        TokenBasedRememberMeServices service = new TokenBasedRememberMeServices("remember-me", userDetailsServiceImpl);
+        service.setParameter("remember-me");
+        service.setTokenValiditySeconds(60*60); // 時效 : 一小時
+
+        return service;
+    }
+
     // 自定義登入
     @Bean
     LoginAuthenticationFilter loginAuthenticationFilter() throws Exception {
@@ -156,6 +184,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         filter.setAuthenticationManager(authenticationManagerBean());
         filter.setAuthenticationSuccessHandler(new AuthenticationSuccessHandlerImpl());
         filter.setAuthenticationFailureHandler(new AuthenticationFailureHandlerImpl());
+        filter.setRememberMeServices(beanRememberMeServices());
         filter.setFilterProcessesUrl("/api/login");
         return filter;
     }

@@ -10,11 +10,8 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.HttpResponse;
+import org.springframework.security.web.authentication.NullRememberMeServices;
+import org.springframework.security.web.authentication.RememberMeServices;
 
 /*
  * For 處理當登入成功後，可以採取什麼動作
@@ -25,6 +22,8 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
     
     private final String LOGGED_IN = "logged_in";
     private final String USER_TYPE = "user_type";
+
+    private RememberMeServices rememberMeServices = new NullRememberMeServices();
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -43,6 +42,10 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
         // out.write(om.writeValueAsString(result));
         // out.flush();
         // out.close();
+
+        //登錄成功後，調用RememberMeServices保存Token相關信息
+        rememberMeServices.loginSuccess(request, response, authentication);
+
         request.getRequestDispatcher("/welcome").forward(request, response);
 		return;
     }

@@ -16,9 +16,8 @@ import com.springboot_practice.demo.repository.UserInfoRespository;
  * 實作驗證功能repository
  */
 @Service
-public class UserDetialsServiceImpl implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
-    // @Autowired
     private UserInfoDao userInfoDao = new UserInfoDao();
 
     @Autowired

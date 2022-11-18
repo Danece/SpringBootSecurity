@@ -17,8 +17,8 @@
                 <p />
                 <!-- <input type="text" th:value="${_csrf.token}" name="_csrf" th:if="${_csrf}" />
                 <p /> -->
-                <!-- <input type="checkbox" name="remember-me" value="true" /> remember me
-                <p /> -->
+                <input type="checkbox" name="remember-me" value="true" /> remember me
+                <p />
                 <label id="authResult" style="color: red;"></label>
                 <p />
                 <button type="submit" class="pure-button pure-button-primary">${btn_login}</button>

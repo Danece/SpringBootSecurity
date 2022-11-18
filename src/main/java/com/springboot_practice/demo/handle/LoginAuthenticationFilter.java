@@ -25,7 +25,10 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         System.out.println("[TEST] " + request.getContentType());
-        if (request.getContentType().equals(MediaType.APPLICATION_JSON_VALUE) ||
+        if (null == request.getContentType()) {
+            return super.attemptAuthentication(request, response);
+        }
+        if (request.getContentType().equals(MediaType.APPLICATION_JSON_UTF8_VALUE) ||
                 request.getContentType().equals(MediaType.APPLICATION_JSON_VALUE)) {
             ObjectMapper mapper = new ObjectMapper();
             UsernamePasswordAuthenticationToken authRequest = null;
