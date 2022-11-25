@@ -8,7 +8,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,11 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.springboot_practice.demo.databaseObjects.UserInfo;
-import com.springboot_practice.demo.repository.UserInfoRespository;
 import com.springboot_practice.demo.service.APIService;
-import com.springboot_practice.demo.token.JwtTokenUtils;
 import com.springboot_practice.demo.vo.ErrorCode;
+import com.springboot_practice.demo.vo.ScheduleVo;
 import com.springboot_practice.demo.vo.UserInfoVo;
 
 import net.minidev.json.JSONObject;
@@ -87,6 +84,22 @@ public class TodoController<ValidationFailureResponse>  {
         return responseResult(HttpStatus.OK, apiService.createOrUpdateUserInfo(request));
     }
 
-    
+    /*
+     * 異動排程時間
+     */
+    @PostMapping("/schedule")
+    public ResponseEntity updateSchedule (@Valid @RequestBody ScheduleVo request) {
+        
+        return responseResult(HttpStatus.OK, apiService.updateSchedule(request));
+    }
+
+    /*
+     * 取得排程資訊
+     */
+    @GetMapping("/schedule")
+    public ResponseEntity getScheduleInfo (@RequestParam HashMap request) {
+        
+        return responseResult(HttpStatus.OK, apiService.getScheduleInfo(request));
+    }
 
 }

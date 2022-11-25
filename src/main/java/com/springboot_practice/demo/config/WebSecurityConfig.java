@@ -30,6 +30,7 @@ import com.springboot_practice.demo.handle.AuthenticationSuccessHandlerImpl;
 import com.springboot_practice.demo.handle.LoginAuthenticationFilter;
 import com.springboot_practice.demo.handle.MyAccessDeniedHandler;
 import com.springboot_practice.demo.handle.RestAuthenticationEntryPoint;
+import com.springboot_practice.demo.service.DailyScheduleService;
 import com.springboot_practice.demo.service.UserDetailsServiceImpl;;
 
 @Configuration
@@ -42,6 +43,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private DataSource dataSource; //數據源
+
+    @Autowired
+    private DailyScheduleService dailyScheduleService;
     
     // For Remember me
     @Bean
@@ -105,7 +109,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             // .maxSessionsPreventsLogin(true) // 禁止新的登錄
             
             ;
-            http.csrf().disable(); // 方便 Postman 測試 API
+        http.csrf().disable(); // 方便 Postman 測試 API
+
+        dailyScheduleService.setSchedule();
     }
 
     /*

@@ -17,7 +17,7 @@
                 <p />
                 <!-- <input type="text" th:value="${_csrf.token}" name="_csrf" th:if="${_csrf}" />
                 <p /> -->
-                <input type="checkbox" name="remember-me" value="true" /> remember me
+                <input type="checkbox" name="remember-me" value="true" /> <%=request.getAttribute("remember_me") %>
                 <p />
                 <label id="authResult" style="color: red;"></label>
                 <p />
@@ -31,7 +31,6 @@
     init();
     function init() {
         // ${status} is set from AuthenticationFailureHandlerImpl.java
-        console.log("TEST", '${status}');
         var authResult = document.getElementById("authResult");
         switch('${status}') {
             case 'loginError':

@@ -35,6 +35,9 @@
 		<sec:authorize access="hasAuthority('admin')">
 			<button onclick="location.href='/time';">管理</button>
 		</sec:authorize>
+		<sec:authorize access="hasAuthority('admin')">
+			<button onclick="location.href='/scheduleList';">排程管理</button>
+		</sec:authorize>
 		<sec:authorize access="hasAnyAuthority('admin', 'normal')">
 			<button onclick="location.href='/logout';" >登出</button>
 		</sec:authorize>
