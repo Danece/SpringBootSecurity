@@ -4,7 +4,7 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
     <head>
-        <title>Schedule List</title>
+        <title>User List</title>
     </head>
     <%@ include file="/WEB-INF/pages/common/header.jsp" %>
 	<body style="padding: 20px; width: 50%; margin: 50px auto;">
@@ -16,21 +16,21 @@
         <table style="text-align: center; width: 100%;">
             <tr>
                 <td>
-                    <i>*</i> <%=request.getAttribute("schedule_name") %>
+                    <i>*</i> <%=request.getAttribute("user_name") %>
                 </td>
                 <td>
-                    <input type="text" id="input_name" disabled>
+                    <input type="text" id="input_name">
                 </td>
                 <td>
-                    <i>*</i> <%=request.getAttribute("execution_time") %>
+                    <i>*</i> <%=request.getAttribute("authority") %>
                 </td>
                 <td>
-                    <input type="text" id="input_cron">
+                    <input type="text" id="input_authority">
                 </td>
             </tr>
         </table>
         <br>
-        <button onclick="checkInput('updateSchedule');" type="button" class="btn btn-outline-primary" ><%=request.getAttribute("btn_save") %></button>
+        <button type="button" class="btn btn-outline-primary" onclick="searchData();" ><%=request.getAttribute("btn_search") %></button>
         <label id="resultMsg" class="resultMsg"></label>
 		<br><br>
         <hr>
@@ -39,25 +39,43 @@
 </html>
 
 <script type="text/javascript">
-    
-    init();
 
-    // 初始化
-    function init() {
+    function searchData() {
         var dataset = [];
+
+        if (DataTable.isDataTable('#table')) {
+            var table = $('#table').DataTable();
+            // clear datatable
+            table.clear().draw();
+            // destroy datatable
+            table.destroy();
+        }
+        
+        var searchName = (null == document.getElementById("input_name").value ? "" : document.getElementById("input_name").value);
+        var authority = (null == document.getElementById("input_authority").value ? "" : document.getElementById("input_authority").value);
 
         // 取得排程DB資料
         $.ajax({
 			type: "GET",
 			contentType: "application/json",
-			url: "/api/schedule",
+			url: "/api/userInfo",
 			dataType: 'json',
+            data: { 
+                name :　searchName,
+                authority : authority,
+            },
             async: false,
 			cache: false,
 			timeout: 600000,
 			success: function (data) {
-                for (var i=0; i<data.content.length; i++) {
-                    dataset.push([data.content[i].name, data.content[i].cron]);
+                // 沒資料
+                if (!data.content.length || typeof data.content.length == "undefined") {
+
+                } else {
+                // 有資料
+                    for (var i=0; i<data.content.length; i++) {
+                        dataset.push([data.content[i].name, data.content[i].authority]);
+                    }
                 }
 			},
 			error: function (e) {
@@ -70,20 +88,12 @@
         var table = $('#table').DataTable({
             data: dataset,
             columns: [
-                {title: '<%=request.getAttribute("schedule_name") %>'},
-                {title: '<%=request.getAttribute("execution_time") %>'}
+                {title: '<%=request.getAttribute("user_name") %>'},
+                {title: '<%=request.getAttribute("authority") %>'}
             ],
             language: {
                 url : "/jsons/TableLanguage_TW.json"
             }
-        });
-        // 設定 Click 動作
-        $('#table tbody').on('click', 'tr', function () {
-            var data = table.row(this).data();
-            document.getElementById("resultMsg").classList.remove("resultMsg_success", "resultMsg_failure");;
-            document.getElementById("resultMsg").innerText = "";
-            document.getElementById("input_name").value = data[0];
-            document.getElementById("input_cron").value = data[1];
         });
     }
 

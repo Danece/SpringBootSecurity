@@ -49,10 +49,27 @@ public class MainController {
 
     // 跳轉頁面作法二
     @RequestMapping("/welcome")
-    public String goMainPage (@RequestParam(value = "name", defaultValue = "Danece") String name) {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        System.out.println("[goMainPage] " + userDetails.getUsername());
+    public String goMainPage (@RequestParam(value = "name", defaultValue = "Danece") String name, Model m) {
+        // UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Locale locale = LocaleContextHolder.getLocale();
+        MessageSource messageSource = messageSource();
+        m.addAttribute("title", messageSource.getMessage( "welcomepage.title",  null, locale));
+        m.addAttribute("msg_hello", messageSource.getMessage( "welcomepage.msg.hello",  null, locale));
+        m.addAttribute("row_account", messageSource.getMessage( "welcomepage.row.account",  null, locale));
+        m.addAttribute("row_userName", messageSource.getMessage( "welcomepage.row.user_name",  null, locale));
+        m.addAttribute("row_credwntials", messageSource.getMessage( "welcomepage.row.credentials",  null, locale));
+        m.addAttribute("row_authorities", messageSource.getMessage( "welcomepage.row.authorities",  null, locale));
+        m.addAttribute("row_remoteAddress", messageSource.getMessage( "welcomepage.row.remote_address",  null, locale));
+        m.addAttribute("row_sessionId", messageSource.getMessage( "welcomepage.row.session_id",  null, locale));
+        m.addAttribute("row_jwtAccessToken", messageSource.getMessage( "welcomepage.row.jwt_access_token",  null, locale));
+        m.addAttribute("btn_logout", messageSource.getMessage("str.logout", null, locale));
+        m.addAttribute("export_jwt", messageSource.getMessage("str.export_jwt", null, locale));
+        m.addAttribute("schedule_manager", messageSource.getMessage("str.schedule_manager", null, locale));
+        m.addAttribute("user_manager", messageSource.getMessage("str.user_manager", null, locale));
+        m.addAttribute("test", messageSource.getMessage("str.test", null, locale));
+        m.addAttribute("msg_loginIdentity", messageSource.getMessage("str.login_identity", null, locale));
+        m.addAttribute("role_manager", messageSource.getMessage("role.manager", null, locale));
+        m.addAttribute("role_employee", messageSource.getMessage("role.employee", null, locale));
         return "welcome.jsp";
     }
 
@@ -84,4 +101,16 @@ public class MainController {
         return "schedule/scheduleList.jsp";
     }
 
+    @RequestMapping("/userList")
+    public String goUserList (Model m) {
+        Locale locale = LocaleContextHolder.getLocale();
+        MessageSource messageSource = messageSource();
+        m.addAttribute("title", messageSource.getMessage( "user.list.title",  null, locale));
+        m.addAttribute("user_name", messageSource.getMessage( "user.list.name",  null, locale));
+        m.addAttribute("authority", messageSource.getMessage( "user.list.autority",  null, locale));
+        m.addAttribute("btn_search", messageSource.getMessage("str.search", null, locale));
+        m.addAttribute("btn_return", messageSource.getMessage("str.return", null, locale));
+        
+        return "user/userList.jsp";
+    }
 }

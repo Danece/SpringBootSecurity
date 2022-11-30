@@ -45,7 +45,7 @@ public class APIService {
             body.put("content", userInfo);
             
         } else {
-            UserInfo userInfo = userRespository.findUser(request.get("name").toString());
+            UserInfo[] userInfo = userRespository.findUser(request.get("name").toString(), request.get("authority").toString());
             body.put("errorCode", errorCode.noError);
             body.put("content", userInfo);
 

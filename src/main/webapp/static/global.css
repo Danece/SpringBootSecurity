@@ -18,3 +18,10 @@ i {
 .resultMsg_failure {
     color: red;
 }
+
+.page_title {
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

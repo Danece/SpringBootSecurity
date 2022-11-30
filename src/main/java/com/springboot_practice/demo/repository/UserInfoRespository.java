@@ -13,8 +13,8 @@ public interface UserInfoRespository extends JpaRepository<UserInfo, Long> {
 
     UserInfo findByNameAndAuthority(String name, String authority);
 
-    @Query("from UserInfo u where u.name=:name")
-    UserInfo findUser(@Param("name") String name);
+    @Query("from UserInfo u where u.name LIKE %:name% AND u.authority LIKE %:authority%")
+    UserInfo[] findUser(@Param("name") String name, @Param("authority") String authority);
 
     @Query("from UserInfo u where 1=1")
     UserInfo[] findAllUser();

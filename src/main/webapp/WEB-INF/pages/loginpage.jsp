@@ -3,25 +3,32 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
     <head>
-        <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/pure-min.css">
-        <meta charset="UTF-8">
         <title>Login form</title>
     </head>
+    <%@ include file="/WEB-INF/pages/common/header.jsp" %>
     <body style="padding: 20px">
         <form class="pure-form" method="post" action="/api/login" style="text-align: center; margin: 150px;">
             <fieldset>
                 <legend style="font-weight: 700;">${title}</legend>
-                <input type="text" placeholder=" <%=request.getAttribute("placeholder_account") %>" name="username" />
-                <p />
-                <input type="password" placeholder=" <%=request.getAttribute("placeholder_password") %>" name="password" />
-                <p />
-                <!-- <input type="text" th:value="${_csrf.token}" name="_csrf" th:if="${_csrf}" />
-                <p /> -->
-                <input type="checkbox" name="remember-me" value="true" /> <%=request.getAttribute("remember_me") %>
-                <p />
-                <label id="authResult" style="color: red;"></label>
-                <p />
-                <button type="submit" class="pure-button pure-button-primary">${btn_login}</button>
+                <div class="container" style="width: 30%;">
+                    <div class="input-group input-group-sm mb-3">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">帳號</span>
+                        <input type="text" class="form-control" placeholder=" <%=request.getAttribute("placeholder_account") %>" name="username" />
+                    </div>
+                    <div class="input-group input-group-sm mb-3">
+                        <span class="input-group-text" id="inputGroup-sizing-sm">密碼</span>
+                        <input type="password" class="form-control" placeholder=" <%=request.getAttribute("placeholder_password") %>" name="password" />
+                    </div>
+                    <div style="margin: -10px 0 5px 0;">
+                        <input type="checkbox" name="remember-me" value="true" /> <%=request.getAttribute("remember_me") %>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-outline-primary">${btn_login}</button>
+                    </div>
+                    <div class="row">
+                        <label id="authResult" style="color: red;"></label>
+                    </div>
+                </div>
             </fieldset>
         </form>
     </body>
