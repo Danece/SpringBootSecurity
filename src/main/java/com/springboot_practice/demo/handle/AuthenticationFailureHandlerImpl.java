@@ -1,8 +1,6 @@
 package com.springboot_practice.demo.handle;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -10,8 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /*
  * For 處理當登入失敗後，可以採取什麼動作

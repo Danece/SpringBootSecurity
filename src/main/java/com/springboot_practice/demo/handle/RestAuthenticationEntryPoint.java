@@ -1,8 +1,6 @@
 package com.springboot_practice.demo.handle;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -10,8 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /*
  * For 當使用者透過 API 訪問工具去訪問後端 API，但實際上使用者尚未登入，所以後端直接回覆 json 格式，阻擋使用者進行未登入的操作，而非跳回傳統 Spring Security 頁面
