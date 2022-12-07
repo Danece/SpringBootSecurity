@@ -1,5 +1,5 @@
 # <h1> 目的
-實作 **Spring Boot Security、AOP、HTTPS** 功能
+實作 **Spring Boot Security、AOP、HTTPS、i18N** 功能
   
 # <h2> 建置環境
 * 構建工具 : Maven
@@ -11,8 +11,9 @@
 * Thymleaf 版本 : 3.0.15
 * jQuery 版本 : 3.5.1
 * AOP 版本 : 2.7.5
+* 資料庫 : MsSQL
 
-# <h2> 步驟
+# <h2> 操作
 * Pom.xml 設定
 * 透過繼承 WebSecurityConfigurerAdapter 來進行設定
 * 實做 UserDetailsService 調整驗證功能
