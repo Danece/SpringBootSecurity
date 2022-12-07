@@ -24,7 +24,7 @@ public class LoginAuthenticationFilter extends UsernamePasswordAuthenticationFil
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        System.out.println("[TEST] " + request.getContentType());
+        
         if (null == request.getContentType()) {
             return super.attemptAuthentication(request, response);
         }

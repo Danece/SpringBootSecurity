@@ -74,6 +74,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			// .antMatchers("/welcome").hasAnyRole("ADMIN", "USER") // 其他指定任意角色都可以訪問
 			// .antMatchers("/main").hasAnyAuthority("manager")
             .antMatchers("/loginpage").permitAll()
+            .antMatchers("/lang").permitAll()
+            .antMatchers("/static/global.css").permitAll()
+            .antMatchers("/scripts/global_function.js").permitAll()
             .anyRequest().authenticated() // 其他尚未匹配到的url都需要身份驗證
             .and()
         // 頁面跳轉

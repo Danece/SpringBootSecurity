@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -70,18 +71,23 @@ public class TodoController<ValidationFailureResponse>  {
      */
     @GetMapping("/userInfo")
     public ResponseEntity getUserInfo(@RequestParam HashMap request) {
-        
         return responseResult(HttpStatus.OK, apiService.getUserInfo(request));
     }
 
     /*
      * 建立新使用者
-     * 參數:名稱、密碼、權限
+     * 參數:操作、名稱、密碼、權限
      */
     @PostMapping("/userInfo")
     public ResponseEntity createOrUpdateUserInfo (@Valid @RequestBody UserInfoVo request) {
         
         return responseResult(HttpStatus.OK, apiService.createOrUpdateUserInfo(request));
+    }
+
+    @DeleteMapping("/userInfo")
+    public ResponseEntity deleteUserInfo (@Valid @RequestBody HashMap request) {
+        
+        return responseResult(HttpStatus.OK, apiService.deleteUserInfo(request));
     }
 
     /*
@@ -100,6 +106,24 @@ public class TodoController<ValidationFailureResponse>  {
     public ResponseEntity getScheduleInfo (@RequestParam HashMap request) {
         
         return responseResult(HttpStatus.OK, apiService.getScheduleInfo(request));
+    }
+
+    /*
+     * 取得角色資訊
+     */
+    @GetMapping("/role")
+    public ResponseEntity getRoleInfo (@RequestParam HashMap request) {
+        
+        return responseResult(HttpStatus.OK, apiService.getRoleInfo(request));
+    }
+
+    /*
+     * 取得權限資訊
+     */
+    @GetMapping("/authority")
+    public ResponseEntity getAuthorityInfo (@RequestParam HashMap request) {
+        
+        return responseResult(HttpStatus.OK, apiService.getAuthorityInfo(request));
     }
 
 }

@@ -1,13 +1,18 @@
 package com.springboot_practice.demo.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.springboot_practice.demo.databaseObjects.AuthorityInfo;
+import com.springboot_practice.demo.databaseObjects.RoleInfo;
 import com.springboot_practice.demo.databaseObjects.ScheduleInfo;
 import com.springboot_practice.demo.databaseObjects.UserInfo;
+import com.springboot_practice.demo.repository.AuthorityInfoResponsitory;
+import com.springboot_practice.demo.repository.RoleInfoResponsitory;
 import com.springboot_practice.demo.repository.ScheduleInfoResponsitory;
 import com.springboot_practice.demo.repository.UserInfoRespository;
 import com.springboot_practice.demo.token.JwtTokenUtils;
@@ -27,6 +32,12 @@ public class APIService {
 
     @Autowired
     private ScheduleInfoResponsitory scheduleInfoResponsitory;
+
+    @Autowired
+    private RoleInfoResponsitory roleInfoResponsitory;
+
+    @Autowired
+    private AuthorityInfoResponsitory authorityInfoResponsitory;
 
     @Autowired
     private DailyScheduleService dailyScheduleService;
@@ -58,6 +69,7 @@ public class APIService {
      */
     public JSONObject createOrUpdateUserInfo(UserInfoVo request) {
         JSONObject body = new JSONObject();
+        String operation = request.getOperation();
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         UserInfo[] userInfo = userRespository.findAllUser();
         boolean alreadyExist = false;
@@ -71,17 +83,52 @@ public class APIService {
                 break;
             }
         }
-            
-        body.put("errorCode", errorCode.noError);
-        if (!alreadyExist) {
-            body.put("errorMsg", "使用者建立成功");
-            userRespository.save(new UserInfo(request.getName(), passwordEncoder.encode( request.getPassword()), request.getAuthority()));
-        
-        } else {
-            body.put("errorMsg", "使用者更新成功");
-            userRespository.save(new UserInfo(old_id, request.getName(), passwordEncoder.encode( request.getPassword()), request.getAuthority()));
-        
+
+        switch(operation) {
+            case "create":
+                if (alreadyExist) {
+                    body.put("errorMsg", "使用者已存在");
+                    body.put("errorCode", errorCode.normalError);
+
+                } else {
+                    body.put("errorMsg", "使用者建立成功");
+                    body.put("errorCode", errorCode.noError);
+                    userRespository.save(new UserInfo(request.getName(), passwordEncoder.encode( request.getPassword()), request.getAuthority()));
+                }
+                break;
+            case "update":
+                if (alreadyExist) {
+                    body.put("errorMsg", "使用者更新成功");
+                    userRespository.save(new UserInfo(old_id, request.getName(), passwordEncoder.encode( request.getPassword()), request.getAuthority()));
+                
+                } else {
+                    body.put("errorMsg", "使用者不存在");
+                    body.put("errorCode", errorCode.normalError);
+                }
+                break;
         }
+
+        return body;
+    }
+
+    /*
+     * 刪除使用者
+     */
+    public JSONObject deleteUserInfo(HashMap request) {
+        JSONObject body = new JSONObject();
+        ArrayList ids = (ArrayList) request.get("id");
+        System.out.println("#######################################33 " + request);
+        if (request.containsKey("id")) {
+            for (int i=0; i<ids.size(); i++) {
+                userRespository.deleteById(Long.valueOf((int) ids.get(i)));
+            }
+            body.put("errorCode", errorCode.noError);
+
+        } else {
+            body.put("errorMsg", "need required value");
+            body.put("errorCode", errorCode.normalError);
+        }
+
         return body;
     }
 
@@ -135,6 +182,26 @@ public class APIService {
         ScheduleInfo[] scheduleInfo = scheduleInfoResponsitory.findAllSchedule();
         body.put("errorCode", errorCode.noError);
         body.put("content", scheduleInfo);
+
+        return body;
+    }
+
+    public JSONObject getRoleInfo(HashMap request) {
+        JSONObject body = new JSONObject();
+
+        RoleInfo[] roleInfo = roleInfoResponsitory.findAllRole();
+        body.put("errorCode", errorCode.noError);
+        body.put("content", roleInfo);
+
+        return body;
+    }
+
+    public JSONObject getAuthorityInfo(HashMap request) {
+        JSONObject body = new JSONObject();
+
+        AuthorityInfo[] roleInfo = authorityInfoResponsitory.findAllAuthority();
+        body.put("errorCode", errorCode.noError);
+        body.put("content", roleInfo);
 
         return body;
     }

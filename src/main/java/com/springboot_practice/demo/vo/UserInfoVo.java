@@ -3,6 +3,7 @@ import javax.validation.constraints.NotEmpty;
 
 public class UserInfoVo {
     private Long id;
+    private String operation;
     private String name;
     private String password;
     private String authority;
@@ -36,6 +37,10 @@ public class UserInfoVo {
 
     public Long getId() {
         return this.id;
+    }
+
+    public String getOperation() {
+        return this.operation;
     }
 
 }

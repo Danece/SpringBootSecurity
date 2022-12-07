@@ -9,20 +9,20 @@
     <%@ include file="/WEB-INF/pages/common/header.jsp" %>
 	<body style="padding: 20px; width: 50%; margin: 50px auto;">
         <div class="page_title" >
-            <h1><%=request.getAttribute("title") %></h1>
-            <button onclick="location.href='/welcome';" type="button" class="btn btn-outline-info" ><%=request.getAttribute("btn_return") %></button>
+            <h1><%=request.getAttribute("SCHEDULE_TITLE") %></h1>
+            <button onclick="location.href='/welcome';" type="button" class="btn btn-outline-info" ><%=request.getAttribute("BTN_RETURN") %></button>
         </div>
 		
         <table style="text-align: center; width: 100%;">
             <tr>
                 <td>
-                    <i>*</i> <%=request.getAttribute("schedule_name") %>
+                    <i>*</i> <%=request.getAttribute("SCHEDULELIST_ROW_SCHEDULE_NAME") %>
                 </td>
                 <td>
                     <input type="text" id="input_name" disabled>
                 </td>
                 <td>
-                    <i>*</i> <%=request.getAttribute("execution_time") %>
+                    <i>*</i> <%=request.getAttribute("SCHEDULELIST_ROW_EXECUTION_TIME") %>
                 </td>
                 <td>
                     <input type="text" id="input_cron">
@@ -30,7 +30,7 @@
             </tr>
         </table>
         <br>
-        <button onclick="checkInput('updateSchedule');" type="button" class="btn btn-outline-primary" ><%=request.getAttribute("btn_save") %></button>
+        <button onclick="checkInput('updateSchedule');" type="button" class="btn btn-outline-primary" ><%=request.getAttribute("BTN_SAVE") %></button>
         <label id="resultMsg" class="resultMsg"></label>
 		<br><br>
         <hr>
@@ -64,23 +64,47 @@
 			}
 		});
 
+        var lang = "";
+        $.ajax({
+			type: "GET",
+			contentType: "application/json",
+			url: "/lang",
+			dataType: 'json',
+            async: false,
+			cache: false,
+			timeout: 600000,
+            success: function (data) {
+                switch(data.lang) {
+                    case "zh_TW":
+                        lang = "/jsons/TableLanguage_TW.json";
+                        break;
+                    case "en_US":
+                        lang = "";
+                        break;
+                }
+			},
+			error: function (e) {
+                console.log(e);
+			}
+		});
+
         // 建立 DataTables 空實體
         $('#table').empty();
         // 建立 DataTables 內容
         var table = $('#table').DataTable({
             data: dataset,
             columns: [
-                {title: '<%=request.getAttribute("schedule_name") %>'},
-                {title: '<%=request.getAttribute("execution_time") %>'}
+                {title: '<%=request.getAttribute("SCHEDULELIST_ROW_SCHEDULE_NAME") %>'},
+                {title: '<%=request.getAttribute("SCHEDULELIST_ROW_EXECUTION_TIME") %>'}
             ],
             language: {
-                url : "/jsons/TableLanguage_TW.json"
+                url : lang
             }
         });
         // 設定 Click 動作
         $('#table tbody').on('click', 'tr', function () {
             var data = table.row(this).data();
-            document.getElementById("resultMsg").classList.remove("resultMsg_success", "resultMsg_failure");;
+            document.getElementById("resultMsg").classList.remove("resultMsg_success", "resultMsg_failure");
             document.getElementById("resultMsg").innerText = "";
             document.getElementById("input_name").value = data[0];
             document.getElementById("input_cron").value = data[1];
@@ -90,18 +114,18 @@
     // 檢查必填項目
     function checkInput(funName) {
         var cron = document.getElementById("input_cron").value;
-        document.getElementById("resultMsg").classList.remove("resultMsg_success", "resultMsg_failure");;
+        document.getElementById("resultMsg").classList.remove("resultMsg_success", "resultMsg_failure");
         document.getElementById("resultMsg").innerText = "";
         switch(funName) {
             case "updateSchedule":
                 var cron = document.getElementById("input_cron").value;
                 if ("" == cron) {
                     document.getElementById("resultMsg").classList.add("resultMsg_failure");
-                    document.getElementById("resultMsg").innerText = '<%=request.getAttribute("msg_requiredValue") %>';
+                    document.getElementById("resultMsg").innerText = '<%=request.getAttribute("MSG_REQUIREDVALUE") %>';
 
                 } else if (6 != cron.split(' ').length || !checkout_shcheduleCron(cron.split(' '))) {
                     document.getElementById("resultMsg").classList.add("resultMsg_failure");
-                    document.getElementById("resultMsg").innerText = '[<%=request.getAttribute("execution_time") %>] <%=request.getAttribute("msg_formatError") %>';
+                    document.getElementById("resultMsg").innerText = '[<%=request.getAttribute("execution_time") %>] <%=request.getAttribute("MSG_FORMATERROR") %>';
 
                 } else {
                     updataSchedule();
@@ -135,7 +159,7 @@
                 document.getElementById("input_cron").value = "";
                 
                 document.getElementById("resultMsg").classList.add("resultMsg_success");
-                document.getElementById("resultMsg").innerText = "成功";
+                document.getElementById("resultMsg").innerText = '<%=request.getAttribute("SUCCESS") %>';
                 init();
 			},
 			error: function (e) {

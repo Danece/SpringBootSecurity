@@ -21,7 +21,7 @@ public class PrintB implements SchedulingConfigurer {
     private static final Logger logger = LoggerFactory.getLogger(PrintB.class);
     
     public PrintB() {
-        //默認情況是：每5秒執行一次.
+        //默認情況是：每秒執行一次.
         cron = "* * * * * *" ;
     }
     

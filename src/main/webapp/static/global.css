@@ -2,6 +2,11 @@
     font-weight: 700;
 }
 
+.login_span {
+    width: 85px; 
+    justify-content: space-around;
+}
+
 i {
     color: red;
 }
